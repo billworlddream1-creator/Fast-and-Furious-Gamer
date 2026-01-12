@@ -1,8 +1,19 @@
+export interface Vehicle {
+  id: string;
+  name: string;
+  category: 'FREE' | 'DESIGNER' | 'SUPER';
+  price: number;
+  nitroPower: number; // 1.0 to 2.5
+  autoBoost: boolean;
+  color: string;
+  description: string;
+}
+
 export interface Game {
   id: string;
   title: string;
   description: string;
-  type: 'RACING' | 'DRIFT' | 'ACTION' | 'STRATEGY' | 'SPORTS' | 'SHOOTER' | 'FLIGHT' | 'SIMULATION' | 'WATER' | 'RETRO' | 'SPACE' | 'HORSE' | 'FANTASY';
+  type: 'RACING' | 'DRIFT' | 'ACTION' | 'STRATEGY' | 'SPORTS' | 'SHOOTER' | 'FLIGHT' | 'SIMULATION' | 'WATER' | 'RETRO' | 'SPACE' | 'HORSE' | 'FANTASY' | 'WARFARE';
   thumbnail: string;
   author: string;
   rating: number;
@@ -29,11 +40,15 @@ export interface PlayerProfile {
   username: string;
   level: number;
   xp: number;
-  credits: number; // In-game currency
-  walletBalance: number; // Real money balance ($)
+  credits: number; 
+  walletBalance: number; 
   paymentDetails?: PaymentDetails;
   gamesPlayed: number;
   lastRewardDate?: number;
+  builtGamesCount: number;
+  lastCreatorRewardDate?: number;
+  ownedVehicles: string[]; // Array of vehicle IDs
+  selectedVehicleId: string;
 }
 
 export enum GameStatus {
@@ -50,6 +65,7 @@ export interface LobbyPlayer {
   team: 'RED' | 'BLUE' | 'SOLO';
   avatar: string;
   level: number;
+  vehicleId: string;
 }
 
 export interface LeaderboardEntry {

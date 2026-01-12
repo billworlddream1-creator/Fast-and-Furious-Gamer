@@ -1,17 +1,17 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Ensure API key is available
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+// Initialize Gemini AI client with the API key from environment variables directly
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const generateGameLore = async (prompt: string): Promise<string> => {
-  if (!apiKey) return "AI services unavailable (Missing API Key).";
-
   try {
+    // Generate content using gemini-3-flash-preview for text generation
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Create a short, thrilling backstory (max 50 words) for a high-speed racing game mode based on this idea: ${prompt}. Make it sound intense like a movie trailer.`,
     });
+    // Access response text property directly as per modern SDK guidelines
     return response.text || "Failed to generate lore.";
   } catch (error) {
     console.error("Gemini Error:", error);
@@ -20,9 +20,8 @@ export const generateGameLore = async (prompt: string): Promise<string> => {
 };
 
 export const generateAICommentary = async (gameState: string): Promise<string> => {
-    if (!apiKey) return "";
-  
     try {
+      // Prompt for an energetic esports commentary
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: `You are an energetic esports announcer for a racing game. The current event is: ${gameState}. Give a one-sentence hype comment.`,
@@ -41,9 +40,8 @@ export interface GameMasterDecision {
 }
 
 export const consultGameMaster = async (score: number, speed: number): Promise<GameMasterDecision> => {
-  if (!apiKey) return { event: "NORMAL TRAFFIC", speedMod: 0, obstacleMod: 1 };
-
   try {
+    // Use JSON response mode with a schema for structured output
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `
@@ -62,13 +60,14 @@ export const consultGameMaster = async (score: number, speed: number): Promise<G
             event: { type: Type.STRING, description: "Name of the event" },
             speedMod: { type: Type.NUMBER, description: "Speed modifier (e.g., -5 to +10)" },
             obstacleMod: { type: Type.NUMBER, description: "Spawn rate multiplier (e.g. 0.5 for less, 2.0 for double)" },
-          }
+          },
+          required: ['event', 'speedMod', 'obstacleMod']
         }
       }
     });
     
     if (response.text) {
-        return JSON.parse(response.text);
+        return JSON.parse(response.text.trim());
     }
     return { event: "NORMAL TRAFFIC", speedMod: 0, obstacleMod: 1 };
   } catch (error) {
