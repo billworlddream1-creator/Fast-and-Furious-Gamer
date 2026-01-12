@@ -1,0 +1,7 @@
+{
+  "name": "Fast and Furious: The Game Zone",
+  "description": "A next-gen hybrid gaming platform allowing players to race, chat globally, and build their own custom game modes using AI tools.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
